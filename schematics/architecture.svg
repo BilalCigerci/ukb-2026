@@ -1,0 +1,195 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 1215" width="1300" height="1215" font-family="Inter, 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif">
+  <title>UKB Layered Architecture</title>
+
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9.4" refY="5"
+            markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0,0.5 L10,5 L0,9.5 Z" fill="var(--edge)"/>
+    </marker>
+    <marker id="arS" viewBox="0 0 10 10" refX="0.6" refY="5"
+            markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M10,0.5 L0,5 L10,9.5 Z" fill="var(--edge)"/>
+    </marker>
+
+    <style><![CDATA[
+      /* Fixed dark theme: an SVG embedded via <img> on GitHub sees the operating
+         system's appearance setting, not the page's, so prefers-color-scheme is not used. */
+      svg {
+        --bg:#0d1117;
+        --t1:#e6edf3; --t2:#9aa7b4; --edge:#6e7b8a;
+        --hwB:#12161c; --hwS:#2b3138; --hwL:#8b96a3; --hwC:#4a545f;
+        --drB:#0b1620; --drS:#1b3a56; --drL:#6cb6ff; --drC:#2d6da8;
+        --daB:#1a1408; --daS:#4d3a12; --daL:#d9a441; --daC:#8a6a1e;
+        --esB:#0b1a11; --esS:#1c3f29; --esL:#5fd68a; --esC:#2f7a4d;
+        --esN:#122a1b;
+        --deB:#150f22; --deS:#38265c; --deL:#c297ff; --deC:#6d47a8;
+        --deN:#20153a;
+        --pyC:#a8484c; --pyB:#1c1112;
+        --spB:#221a09; --spS:#8a6a1e; --chS:#5a4514;
+      }
+
+      .band  { stroke-width: 1.2; }
+      .bl    { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+      .node  { stroke-width: 1.5; }
+      .t1    { font-size: 15px;   font-weight: 650; fill: var(--t1); }
+      .t1s   { font-size: 13.5px; font-weight: 650; fill: var(--t1); }
+      .t2    { font-size: 12.5px; font-weight: 400; fill: var(--t2); }
+      .t3    { font-size: 11px;   font-weight: 400; fill: var(--t2); }
+      .mono  { font-size: 13px; font-weight: 500; fill: var(--t1);
+               font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .edge  { fill: none; stroke: var(--edge); stroke-width: 1.8;
+               stroke-linecap: round; stroke-linejoin: round; marker-end: url(#ar); }
+      .dash  { stroke-dasharray: 6 5; }
+    ]]></style>
+  </defs>
+
+  <rect width="1300" height="1215" fill="var(--bg)"/>
+
+  <!-- ═══════════ LAYER FRAMES ═══════════ -->
+  <text class="bl" x="42" y="50"   fill="var(--hwL)">Hardware layer</text>
+  <rect class="band" x="40" y="60"  width="860" height="128" rx="12" fill="var(--hwB)" stroke="var(--hwS)"/>
+
+  <text class="bl" x="42" y="212"  fill="var(--drL)">Driver layer</text>
+  <rect class="band" x="40" y="222" width="860" height="100" rx="12" fill="var(--drB)" stroke="var(--drS)"/>
+
+  <text class="bl" x="42" y="346"  fill="var(--daL)">Data layer</text>
+  <rect class="band" x="40" y="356" width="860" height="112" rx="12" fill="var(--daB)" stroke="var(--daS)"/>
+
+  <text class="bl" x="42" y="492"  fill="var(--esL)">Estimation layer</text>
+  <rect class="band" x="40" y="502" width="860" height="300" rx="12" fill="var(--esB)" stroke="var(--esS)"/>
+
+  <text class="bl" x="42" y="826"  fill="var(--deL)">Decision layer</text>
+  <rect class="band" x="40" y="836" width="860" height="200" rx="12" fill="var(--deB)" stroke="var(--deS)"/>
+
+  <!-- ═══════════ CONNECTIONS ═══════════ -->
+
+  <!-- Hardware <-> Driver -->
+  <path class="edge" d="M191,170 L191,258"/>
+  <path class="edge" d="M377,258 L377,170"/>
+  <path class="edge" marker-start="url(#arS)" d="M563,258 L563,170"/>
+  <path class="edge" marker-start="url(#arS)" d="M749,258 L749,170"/>
+
+  <!-- Driver <-> data_manager -->
+  <path class="edge" d="M191,306 L191,392"/>
+  <path class="edge" d="M377,392 L377,306"/>
+  <path class="edge" marker-start="url(#arS)" d="M563,392 L563,306"/>
+  <path class="edge" marker-start="url(#arS)" d="M749,392 L749,306"/>
+
+  <!-- Layers <-> FlightData spine -->
+  <path class="edge" marker-start="url(#arS)" d="M835,423 L930,423"/>
+  <path class="edge" marker-start="url(#arS)" d="M835,665 L930,665"/>
+  <path class="edge" marker-start="url(#arS)" d="M835,900 L930,900"/>
+
+  <!-- sensor_fusion <-> engines -->
+  <path class="edge" marker-start="url(#arS)" d="M395,575 L458,575 Q470,575 470,587 L470,606 Q470,618 482,618 L545,618"/>
+  <path class="edge" marker-start="url(#arS)" d="M395,700 L458,700 Q470,700 470,688 L470,684 Q470,672 482,672 L545,672"/>
+
+  <!-- theta_check -> sensor_fusion (feedback) — 2/3 of sensor_fusion's bottom edge -->
+  <path class="edge dash" d="M695,969 L726,969 Q738,969 738,957 L738,730"/>
+  <text class="t3" x="748" y="820">angle criterion flag</text>
+
+  <!-- flight_algorithm -> sensor_fusion (feedback) — 1/3 of sensor_fusion's bottom edge -->
+  <path class="edge dash" d="M642,872 L642,730"/>
+  <text class="t3" x="652" y="820">flight phase</text>
+
+  <!-- flight_algorithm -> kalman_filter / sensor_check (feedback) -->
+  <path class="edge dash" d="M250,872 L250,772"/>
+  <text class="t3" x="260" y="820">flight phase</text>
+
+  <!-- flight_algorithm -> pyro -->
+  <path class="edge" d="M470,1012 L470,1072"/>
+
+  <!-- ═══════════ HARDWARE ═══════════ -->
+  <rect class="node" x="105" y="98" width="172" height="72" rx="9" fill="var(--bg)" stroke="var(--hwC)"/>
+  <text class="t1" x="191" y="130" text-anchor="middle">BMP390 · BMI088</text>
+  <text class="t2" x="191" y="150" text-anchor="middle">SPI2 + data-ready EXTI</text>
+
+  <rect class="node" x="291" y="98" width="172" height="72" rx="9" fill="var(--bg)" stroke="var(--hwC)"/>
+  <text class="t1" x="377" y="130" text-anchor="middle">W25Q64</text>
+  <text class="t2" x="377" y="150" text-anchor="middle">SPI1 + DMA</text>
+
+  <rect class="node" x="477" y="98" width="172" height="72" rx="9" fill="var(--bg)" stroke="var(--hwC)"/>
+  <text class="t1" x="563" y="130" text-anchor="middle">FT232 / MAX3232</text>
+  <text class="t2" x="563" y="150" text-anchor="middle">USART2-3 + DMA</text>
+
+  <rect class="node" x="663" y="98" width="172" height="72" rx="9" fill="var(--bg)" stroke="var(--hwC)"/>
+  <text class="t1" x="749" y="130" text-anchor="middle">RTC + Backup SRAM</text>
+  <text class="t2" x="749" y="150" text-anchor="middle">retained across reset</text>
+
+  <!-- ═══════════ DRIVER ═══════════ -->
+  <rect class="node" x="106" y="258" width="170" height="48" rx="9" fill="var(--bg)" stroke="var(--drC)"/>
+  <text class="t1" x="191" y="288" text-anchor="middle">bmp390 · bmi088</text>
+
+  <rect class="node" x="322" y="258" width="110" height="48" rx="9" fill="var(--bg)" stroke="var(--drC)"/>
+  <text class="t1" x="377" y="288" text-anchor="middle">w25q</text>
+
+  <rect class="node" x="488" y="258" width="150" height="48" rx="9" fill="var(--bg)" stroke="var(--drC)"/>
+  <text class="t1" x="563" y="288" text-anchor="middle">uart_handler</text>
+
+  <rect class="node" x="664" y="258" width="170" height="48" rx="9" fill="var(--bg)" stroke="var(--drC)"/>
+  <text class="t1" x="749" y="288" text-anchor="middle">backup_domain</text>
+
+  <!-- ═══════════ DATA ═══════════ -->
+  <rect class="node" x="105" y="392" width="730" height="62" rx="9" fill="var(--bg)" stroke="var(--daC)"/>
+  <text class="t1" x="470" y="419" text-anchor="middle">data_manager</text>
+  <text class="t2" x="470" y="439" text-anchor="middle">SIT · SUT · flash · backup SRAM packets</text>
+
+  <!-- ═══════════ ESTIMATION ═══════════ -->
+  <rect class="node" x="105" y="540" width="290" height="70" rx="9" fill="var(--bg)" stroke="var(--esC)"/>
+  <text class="t1" x="250" y="571" text-anchor="middle">quaternion</text>
+  <text class="t2" x="250" y="591" text-anchor="middle">Adaptive Mahony</text>
+
+  <rect class="node" x="105" y="636" width="290" height="136" rx="9" fill="var(--bg)" stroke="var(--esC)"/>
+  <text class="t1" x="250" y="664" text-anchor="middle">kalman_filter</text>
+  <text class="t2" x="250" y="684" text-anchor="middle">x = h, v, a</text>
+  <rect x="123" y="696" width="254" height="58" rx="7" fill="var(--esN)" stroke="var(--esC)" stroke-width="1.2"/>
+  <text class="t1s" x="250" y="719" text-anchor="middle">sensor_check</text>
+  <text class="t3"  x="250" y="738" text-anchor="middle">NaN · range · stuck · sudden jump</text>
+
+  <rect class="node" x="545" y="600" width="290" height="130" rx="9" fill="var(--bg)" stroke="var(--esC)"/>
+  <text class="t1" x="690" y="638" text-anchor="middle">sensor_fusion</text>
+  <text class="t2" x="690" y="663" text-anchor="middle">QuaternionUpdate @ sensor rate</text>
+  <text class="t2" x="690" y="685" text-anchor="middle">KalmanUpdate @ 10 Hz</text>
+
+  <!-- ═══════════ DECISION ═══════════ -->
+  <rect class="node" x="105" y="872" width="730" height="140" rx="9" fill="var(--bg)" stroke="var(--deC)"/>
+  <text class="t1" x="470" y="902" text-anchor="middle">flight_algorithm</text>
+  <text class="t2" x="470" y="922" text-anchor="middle">phase state machine · apogee thresholds · pyro firing</text>
+  <rect x="245" y="940" width="450" height="58" rx="7" fill="var(--deN)" stroke="var(--deC)" stroke-width="1.2"/>
+  <text class="t1s" x="470" y="963" text-anchor="middle">theta_check</text>
+  <text class="t3"  x="470" y="982" text-anchor="middle">tilt angle reliability</text>
+
+  <!-- ═══════════ PYRO ═══════════ -->
+  <rect class="node" x="330" y="1072" width="280" height="62" rx="9" fill="var(--pyB)" stroke="var(--pyC)"/>
+  <text class="t1" x="470" y="1099" text-anchor="middle">RECOVERY_1 / RECOVERY_2</text>
+  <text class="t2" x="470" y="1119" text-anchor="middle">pyro channels</text>
+
+  <!-- ═══════════ FLIGHTDATA SPINE ═══════════ -->
+  <rect class="node" x="930" y="380" width="330" height="620" rx="12" fill="var(--spB)" stroke="var(--spS)" stroke-width="2"/>
+  <text class="t1" x="1095" y="414" text-anchor="middle">FlightData</text>
+  <text class="t2" x="1095" y="436" text-anchor="middle">single shared data block</text>
+
+  <rect x="950" y="470" width="290" height="60" rx="7" fill="var(--bg)" stroke="var(--chS)" stroke-width="1.2"/>
+  <text class="mono" x="1095" y="505" text-anchor="middle">raw</text>
+
+  <rect x="950" y="560" width="290" height="60" rx="7" fill="var(--bg)" stroke="var(--chS)" stroke-width="1.2"/>
+  <text class="mono" x="1095" y="595" text-anchor="middle">filtered</text>
+
+  <rect x="950" y="650" width="290" height="60" rx="7" fill="var(--bg)" stroke="var(--chS)" stroke-width="1.2"/>
+  <text class="mono" x="1095" y="685" text-anchor="middle">flags</text>
+
+  <rect x="950" y="740" width="290" height="60" rx="7" fill="var(--bg)" stroke="var(--chS)" stroke-width="1.2"/>
+  <text class="mono" x="1095" y="775" text-anchor="middle">time</text>
+
+  <rect x="950" y="830" width="290" height="60" rx="7" fill="var(--bg)" stroke="var(--chS)" stroke-width="1.2"/>
+  <text class="mono" x="1095" y="865" text-anchor="middle">sut_state_packet</text>
+
+  <rect x="950" y="920" width="290" height="60" rx="7" fill="var(--bg)" stroke="var(--chS)" stroke-width="1.2"/>
+  <text class="mono" x="1095" y="955" text-anchor="middle">bkpsram_packet</text>
+
+  <!-- ═══════════ LEGEND ═══════════ -->
+  <path class="edge" d="M105,1176 L153,1176"/>
+  <text class="t3" x="163" y="1180">data flow · call</text>
+  <path class="edge dash" d="M315,1176 L363,1176"/>
+  <text class="t3" x="373" y="1180">flag · state info</text>
+</svg>

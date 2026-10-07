@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 1150" width="1300" height="1150" font-family="Inter, 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif">
+  <title>UKB Flight Algorithm</title>
+
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9.4" refY="5"
+            markerWidth="6.5" markerHeight="6.5" orient="auto">
+      <path d="M0,0.5 L10,5 L0,9.5 Z" fill="var(--edge)"/>
+    </marker>
+
+    <style><![CDATA[
+      /* Fixed dark theme: an SVG embedded via <img> on GitHub sees the operating
+         system's appearance setting, not the page's, so prefers-color-scheme is not used. */
+      svg {
+        --bg:#0d1117;
+        --t1:#e6edf3; --t2:#9aa7b4; --edge:#6e7b8a;
+        --drB:#0b1620; --drS:#1b3a56; --drL:#6cb6ff; --drC:#2d6da8;
+        --drN:#10223a;
+        --pyC:#a8484c; --pyB:#1c1112; --pyN:#2a1517;
+      }
+
+      .band  { stroke-width: 1.2; }
+      .bl    { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+      .node  { stroke-width: 1.5; }
+      .t1    { font-size: 15px;   font-weight: 650; fill: var(--t1); }
+      .ct    { font-size: 14px;   font-weight: 650; fill: var(--t1); }
+      .t2    { font-size: 12.5px; font-weight: 400; fill: var(--t2); }
+      .t3    { font-size: 11px;   font-weight: 400; fill: var(--t2); }
+      .mono  { font-size: 12px; font-weight: 500; fill: var(--t1);
+               font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .ph    { font-size: 14.5px; font-weight: 700; fill: var(--t1);
+               font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+      .x     { fill: var(--drL); font-weight: 700; }
+      .edge  { fill: none; stroke: var(--edge); stroke-width: 1.8;
+               stroke-linecap: round; stroke-linejoin: round; marker-end: url(#ar); }
+      .line  { fill: none; stroke: var(--edge); stroke-width: 1.8;
+               stroke-linecap: round; stroke-linejoin: round; }
+    ]]></style>
+  </defs>
+
+  <rect width="1300" height="1150" fill="var(--bg)"/>
+
+  <!-- ═══════════ FRAME ═══════════ -->
+  <text class="bl" x="82" y="50" fill="var(--drL)">Phase state machine · FlightAlgorithm_Update · 10 Hz</text>
+  <rect class="band" x="80" y="60" width="1180" height="1024" rx="12" fill="var(--drB)" stroke="var(--drS)"/>
+
+  <!-- COAST frame (behind the arrows) -->
+  <rect class="node" x="106" y="362" width="654" height="422" rx="14" fill="var(--bg)" stroke="var(--drC)"/>
+
+  <!-- ═══════════ CONNECTIONS ═══════════ -->
+
+  <!-- IDLE → BOOST -->
+  <path class="edge" d="M433,146 L433,224"/>
+  <text class="ct" x="453" y="181">v &gt; 35 m/s  <tspan class="x">×4</tspan></text>
+  <text class="t3" x="453" y="199">liftoff · SUT bit 0</text>
+
+  <!-- BOOST → COAST -->
+  <path class="edge" d="M433,282 L433,360"/>
+  <text class="ct" x="453" y="317">a &lt; 0 m/s²  <tspan class="x">×4</tspan></text>
+  <text class="t3" x="453" y="335">burnout · SUT bit 1</text>
+
+  <!-- arming → both criteria -->
+  <path class="edge" d="M433,506 L433,514 Q433,526 421,526 L283,526 Q271,526 271,538 L271,544"/>
+  <path class="edge" d="M433,506 L433,514 Q433,526 445,526 L583,526 Q595,526 595,538 L595,544"/>
+
+  <!-- both criteria → drogue -->
+  <path class="line" d="M271,634 L271,646 Q271,658 283,658 L433,658"/>
+  <path class="line" d="M595,634 L595,646 Q595,658 583,658 L433,658"/>
+  <path class="edge" d="M433,658 L433,680"/>
+  <text class="t3" x="445" y="674">first to confirm</text>
+
+  <!-- drogue → RECOVERY_2 -->
+  <path class="edge" d="M603,718 L700,718 Q712,718 712,730 L712,734 Q712,746 724,746 L808,746"/>
+
+  <!-- COAST → MAIN_DESCENT -->
+  <path class="edge" d="M433,754 L433,862"/>
+  <text class="ct" x="413" y="815" text-anchor="end">h &lt; 500 m  <tspan class="x">×3</tspan></text>
+  <text class="t3" x="413" y="833" text-anchor="end">if drogue deployed · SUT bit 6 + 7</text>
+  <circle cx="433" cy="809" r="3.5" fill="var(--edge)"/>
+  <path class="edge" d="M433,809 L808,809"/>
+  <text class="t3" x="620" y="801" text-anchor="middle">main parachute command</text>
+
+  <!-- MAIN_DESCENT → LANDED -->
+  <path class="edge" d="M433,920 L433,998"/>
+  <text class="ct" x="453" y="955">|v| &lt; 0.1 m/s  OR  h &lt; 30 m  <tspan class="x">×3</tspan></text>
+  <text class="t3" x="453" y="973">landing</text>
+
+  <!-- ═══════════ PHASES ═══════════ -->
+  <rect class="node" x="283" y="90" width="300" height="56" rx="28" fill="var(--bg)" stroke="var(--drC)"/>
+  <text class="ph" x="433" y="123" text-anchor="middle">PHASE_IDLE</text>
+
+  <rect class="node" x="283" y="226" width="300" height="56" rx="28" fill="var(--bg)" stroke="var(--drC)"/>
+  <text class="ph" x="433" y="259" text-anchor="middle">PHASE_BOOST</text>
+
+  <!-- COAST -->
+  <text class="ph" x="433" y="392" text-anchor="middle">PHASE_COAST</text>
+  <text class="t3" x="433" y="410" text-anchor="middle">unpowered ascent and descent under drogue · the recovery sequence runs in this phase</text>
+
+  <rect x="263" y="430" width="340" height="76" rx="8" fill="var(--drN)" stroke="var(--drC)" stroke-width="1.2"/>
+  <text class="t1" x="433" y="454" text-anchor="middle">Arming</text>
+  <text class="ct" x="433" y="475" text-anchor="middle">h &gt; 2200 m  <tspan class="x">×5</tspan></text>
+  <text class="t3" x="433" y="494" text-anchor="middle">one-way · gates every parachute command · SUT bit 2</text>
+
+  <rect x="126" y="546" width="290" height="88" rx="8" fill="var(--drN)" stroke="var(--drC)" stroke-width="1.2"/>
+  <text class="t1" x="271" y="570" text-anchor="middle">Apogee · velocity</text>
+  <text class="ct" x="271" y="592" text-anchor="middle">v &lt; 2 m/s  <tspan class="x">×5</tspan></text>
+  <text class="t3" x="271" y="610" text-anchor="middle">always evaluated</text>
+  <text class="t3" x="271" y="625" text-anchor="middle">SUT bit 4 + 5</text>
+
+  <rect x="450" y="546" width="290" height="88" rx="8" fill="var(--drN)" stroke="var(--drC)" stroke-width="1.2"/>
+  <text class="t1" x="595" y="570" text-anchor="middle">Apogee · angle</text>
+  <text class="ct" x="595" y="592" text-anchor="middle">θ &gt; 70°  <tspan class="x">×3</tspan></text>
+  <text class="t3" x="595" y="610" text-anchor="middle">only if the angle criterion is enabled</text>
+  <text class="t3" x="595" y="625" text-anchor="middle">SUT bit 3 + 5</text>
+
+  <rect x="263" y="682" width="340" height="72" rx="8" fill="var(--drN)" stroke="var(--drC)" stroke-width="1.2"/>
+  <text class="t1" x="433" y="706" text-anchor="middle">Drogue parachute</text>
+  <text class="t3" x="433" y="725" text-anchor="middle">fires once · the second criterion only sets its flag</text>
+  <text class="t3" x="433" y="741" text-anchor="middle">phase does not change</text>
+
+  <rect class="node" x="283" y="864" width="300" height="56" rx="28" fill="var(--bg)" stroke="var(--drC)"/>
+  <text class="ph" x="433" y="897" text-anchor="middle">PHASE_MAIN_DESCENT</text>
+
+  <rect class="node" x="283" y="1000" width="300" height="56" rx="28" fill="var(--bg)" stroke="var(--drC)"/>
+  <text class="ph" x="433" y="1033" text-anchor="middle">PHASE_LANDED</text>
+
+  <!-- ═══════════ RECOVERY OUTPUTS ═══════════ -->
+  <rect class="node" x="810" y="664" width="424" height="182" rx="9" fill="var(--pyB)" stroke="var(--pyC)"/>
+  <text class="t1" x="830" y="690">Recovery outputs</text>
+  <text class="t3" x="830" y="708">held high together with the buzzer for 1200 ms, then pulled low</text>
+
+  <rect x="830" y="724" width="384" height="44" rx="7" fill="var(--pyN)" stroke="var(--pyC)" stroke-width="1.2"/>
+  <text class="mono" x="846" y="751">RECOVERY_2</text>
+  <text class="t2" x="946" y="751">drogue parachute</text>
+
+  <rect x="830" y="787" width="384" height="44" rx="7" fill="var(--pyN)" stroke="var(--pyC)" stroke-width="1.2"/>
+  <text class="mono" x="846" y="814">RECOVERY_1</text>
+  <text class="t2" x="946" y="814">main parachute</text>
+
+  <!-- ═══════════ LEGEND ═══════════ -->
+  <path class="edge" d="M110,1120 L158,1120"/>
+  <text class="t3" x="168" y="1124">transition · flow</text>
+  <text class="ct" x="290" y="1125"><tspan class="x">×N</tspan></text>
+  <text class="t3" x="316" y="1124">consecutive 100 ms samples; the counter resets if the condition breaks even once</text>
+</svg>
